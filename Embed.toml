@@ -65,7 +65,7 @@ enabled = true
 #              BinaryLE - Display as raw hex
 channels = [
     #{ up = 0, down = 0, name = "name", up_mode = "NoBlockSkip", format = "Defmt" },
-    { up = 0, down = 0, name = "name", up_mode = "NoBlockSkip", format = "String" },
+#    { up = 0, down = 0, name = "name", up_mode = "NoBlockSkip", format = "String" },
 ]
 # The duration in ms for which the logger should retry to attach to RTT.
 timeout = 3000

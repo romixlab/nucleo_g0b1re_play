@@ -20,7 +20,7 @@ version = "0.2.0"
 
 [lib]
 name = "common"
-path = "src/lib.rs"
+path = "src/lib/lib.rs"
 
 # this lets you use `cargo fix`!
 [[bin]]
