@@ -3,6 +3,8 @@
 .gdb_history
 Cargo.lock
 target/
+logs/
+.idea/
 
 # editor files
 .vscode/*
