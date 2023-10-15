@@ -1,7 +1,7 @@
 #![no_std]
 use crate::cli::cli_print_prompt;
 use core::fmt::Write;
-use rtt_target::{rprintln, rtt_init, DownChannel, UpChannel};
+use rtt_target::{rtt_init, DownChannel, UpChannel};
 
 pub mod cli;
 #[allow(dead_code)]
@@ -20,7 +20,7 @@ pub struct RttIo {
     pub log: UpChannel,
 }
 
-pub fn init(bin_name: &'static str) -> RttIo {
+pub fn init() -> RttIo {
     let channels = rtt_init! {
         up: {
             0: {
@@ -53,18 +53,18 @@ pub fn init(bin_name: &'static str) -> RttIo {
         cli_buf_pos: 0,
         log: channels.up.1,
     };
-    print_fw_info(&mut io, bin_name);
+    print_fw_info(&mut io);
     cli_print_prompt(&mut io);
     io
 }
 
-pub fn print_fw_info(io: &mut RttIo, bin_name: &'static str) {
-    writeln!(io.cli_output, "{}", vt100::DIM).ok();
+pub fn print_fw_info(io: &mut RttIo) {
+    // writeln!(io.cli_output, "{}", vt100::DIM).ok();
     writeln!(
         io.cli_output,
-        "{}/{} v{} debug={} opt={} {}",
+        "{} v{} debug={} opt={} {}",
         built_info::PKG_NAME,
-        bin_name,
+        // bin_name,
         // built_info::BIN_NAME,
         built_info::PKG_VERSION,
         built_info::DEBUG,
@@ -89,6 +89,6 @@ pub fn print_fw_info(io: &mut RttIo, bin_name: &'static str) {
         built_info::GIT_DIRTY.unwrap_or(true),
     )
     .ok();
-    writeln!(io.cli_output, "features=\"{}\"", built_info::FEATURES_STR).ok();
-    writeln!(io.cli_output, "{}", vt100::DEFAULT).ok();
+    writeln!(io.cli_output, "features=\"{}\"\n", built_info::FEATURES_STR).ok();
+    // writeln!(io.cli_output, "{}", vt100::DEFAULT).ok();
 }

@@ -1,9 +1,9 @@
-use crate::RttIo;
+use crate::{print_fw_info, RttIo};
 use core::fmt::Write;
 use core::str::SplitAsciiWhitespace;
 
 pub fn cli_print_prompt(io: &mut RttIo) {
-    writeln!(io.cli_output, "cli> ").ok();
+    write!(io.cli_output, "cli> ").ok();
 }
 
 pub fn cli<F: FnMut(&str, &mut SplitAsciiWhitespace, &mut dyn Write)>(
@@ -15,6 +15,8 @@ pub fn cli<F: FnMut(&str, &mut SplitAsciiWhitespace, &mut dyn Write)>(
     if read_len == 0 {
         return;
     }
+    io.cli_output
+        .write(&buf[io.cli_buf_pos..io.cli_buf_pos + read_len]);
     io.cli_buf_pos += read_len;
     if buf[io.cli_buf_pos - 1] != b'\n' {
         return;
@@ -28,7 +30,11 @@ pub fn cli<F: FnMut(&str, &mut SplitAsciiWhitespace, &mut dyn Write)>(
     let Some(cmd) = args.next() else {
         return;
     };
-    handler(cmd, &mut args, &mut io.cli_output);
+    if cmd == "fwinfo" {
+        print_fw_info(io);
+    } else {
+        handler(cmd, &mut args, &mut io.cli_output);
+    }
 
     cli_print_prompt(io);
 }
